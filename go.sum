@@ -6,6 +6,10 @@ github.com/acidonper/jump-app-protos v0.0.0-20211020114114-0eb5e4b5d285 h1:qXi0U
 github.com/acidonper/jump-app-protos v0.0.0-20211020114114-0eb5e4b5d285/go.mod h1:22iU/edg1ewKUJnouOvuuhIEShmvp868oAQ0aqAqwvg=
 github.com/acidonper/jump-app-protos v0.0.0-20211021110714-bac09e44aa56 h1:6bpvStPR1fP+niqVbr93nkK9ZmumCk1VjrVMD89CfP8=
 github.com/acidonper/jump-app-protos v0.0.0-20211021110714-bac09e44aa56/go.mod h1:22iU/edg1ewKUJnouOvuuhIEShmvp868oAQ0aqAqwvg=
+github.com/acidonper/jump-app-protos v0.0.0-20211021223903-24949ead632e h1:EvYHeyUmyqB5XrkYOKXRZX4ynQgQJ+CdpXr2D5GbZbQ=
+github.com/acidonper/jump-app-protos v0.0.0-20211021223903-24949ead632e/go.mod h1:22iU/edg1ewKUJnouOvuuhIEShmvp868oAQ0aqAqwvg=
+github.com/acidonper/jump-app-protos v0.0.0-20211022085840-291e9cd0f622 h1:5g8824E9t29QrtZQzH8tDHsFtRALF8FfEhqvydpqkc4=
+github.com/acidonper/jump-app-protos v0.0.0-20211022085840-291e9cd0f622/go.mod h1:22iU/edg1ewKUJnouOvuuhIEShmvp868oAQ0aqAqwvg=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/cespare/xxhash/v2 v2.1.1/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=

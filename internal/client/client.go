@@ -14,35 +14,32 @@ const (
 	defaultName = "world"
 )
 
-func PerformJump() {
-	conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
+func Jump(jump *pb.JumpReq) (*pb.JumpRes, error) {
+	log.Printf("gRPC Client: Request received %v", jump.GetJump())
+
+	// Obtaining Jump Step
+	a := jump.Jump.Jumps[:len(jump.Jump.Jumps)]
+	addr := a[0] + ":50051"
+	
+	// Connect with gRPC server
+	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
-		log.Fatalf("did not connect: %v", err)
+		log.Fatalf("Error gRPC server connection: %v", err)
+		return &pb.JumpRes{Response: &pb.Response{Code: 400, Message: "/jump - Farewell from Golang gRPC" }}, nil
 	}
 	defer conn.Close()
 
+	// Perform Jump
 	c := pb.NewJumpServiceClient(conn)
-
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
-
-	r, err := c.FinalJump(ctx, &pb.FinalJumpReq{})
+	r, err := c.Jump(ctx, &pb.JumpReq{Jump: jump.Jump})
 	if err != nil {
-		log.Fatalf("GET - could not greet: %v", err)
+		log.Fatalf("Error gRPC server negotiation: %v", err)
+		return &pb.JumpRes{Response: &pb.Response{Code: 400, Message: "/jump - Farewell from Golang gRPC" }}, nil
 	}
-	log.Printf("GET - Greeting: %s", r.GetResponse())
 
-	p := &pb.Jump{
-		Message: "hola",
-		LastPath: "/jump",
-		JumpPath: "/jump",
-		Jumps: []*pb.Jump_JumpStep{{
-			Jump: "localhost",
-		}},
-	}
-	r, err = c.PerformJump(ctx, &pb.PerformJumpReq{Jump: p})
-	if err != nil {
-		log.Fatalf("POST - could not greet: %v", err)
-	}
-	log.Printf("POST - Greeting: %s", r.GetResponse())
+	// Response
+	log.Printf("gRPC Client: Send received response %v", r.GetResponse())
+	return &pb.JumpRes{Response: &pb.Response{Code: 200, Message: "/ - Greetings from Golang gRPC!" }}, nil
 }

@@ -5,6 +5,7 @@ import (
 	"log"
 	"net"
 
+	grpcclient "github.com/acidonper/jump-app-golang-grpc/internal/client"
 	pb "github.com/acidonper/jump-app-protos/jump"
 	"google.golang.org/grpc"
 )
@@ -17,14 +18,28 @@ type server struct {
 	pb.UnimplementedJumpServiceServer
 }
 
-func (s *server) PerformJump(ctx context.Context, in *pb.PerformJumpReq) (*pb.JumpRes, error) {
-	log.Printf("POST: %v", in.GetJump())
-	return &pb.JumpRes{Response: &pb.JumpRes_JumpResponse{Code: 123, Message: "pepe" }}, nil
-}
+func (s *server) Jump(ctx context.Context, in *pb.JumpReq) (*pb.JumpRes, error) {
+	log.Printf("gRPC Server: Request received %v", in.GetJump())
 
-func (s *server) FinalJump(ctx context.Context, in *pb.FinalJumpReq) (*pb.JumpRes, error) {
-	log.Println("GET")
-	return &pb.JumpRes{Response: &pb.JumpRes_JumpResponse{Code: 123, Message: "pepe" }}, nil
+	// Evaluate jumps to send response or perform a jump 
+	if len(in.Jump.Jumps) == 0 || in.Jump.Jumps[0] == "" {
+		log.Printf("gRPC Server: Send response 200")
+		return &pb.JumpRes{Response: &pb.Response{Code: 200, Message: "/ - Greetings from Golang gRPC!",}}, nil
+	} else {
+		if len(in.Jump.Jumps) != 1 {
+			in.Jump.Jumps = in.Jump.Jumps[:len(in.Jump.Jumps)-1]
+		} else {
+			in.Jump.Jumps[0] = ""
+		}
+		r, err := grpcclient.Jump(in)
+		if err != nil {
+			log.Fatalf("Error local calling grpcclient from grpcserver - %v", err)
+			return &pb.JumpRes{Response: &pb.Response{Code: 500, Message: "/jump - Farewell from Python! Error Jumping" }}, nil
+		}
+		log.Printf("gRPC Server: Response received %v", r.GetResponse())
+		return r, nil
+	}
+
 }
 
 func Start() {
