@@ -21,16 +21,15 @@ type server struct {
 func (s *server) Jump(ctx context.Context, in *pb.JumpReq) (*pb.JumpRes, error) {
 	log.Printf("gRPC Server: Request received %v", in.GetJump())
 
+	// Add a new count
+	in.Jump.Count = in.Jump.Count + 1
+	log.Printf("gRPC Server: Steps count %v", in.Jump.Count)
+
 	// Evaluate jumps to send response or perform a jump 
 	if len(in.Jump.Jumps) == 0 || in.Jump.Jumps[0] == "" {
 		log.Printf("gRPC Server: Send response 200")
 		return &pb.JumpRes{Response: &pb.Response{Code: 200, Message: "/ - Greetings from Golang gRPC!",}}, nil
 	} else {
-		if len(in.Jump.Jumps) != 1 {
-			in.Jump.Jumps = in.Jump.Jumps[:len(in.Jump.Jumps)-1]
-		} else {
-			in.Jump.Jumps[0] = ""
-		}
 		r, err := grpcclient.Jump(in)
 		if err != nil {
 			log.Fatalf("Error local calling grpcclient from grpcserver - %v", err)
@@ -39,7 +38,6 @@ func (s *server) Jump(ctx context.Context, in *pb.JumpReq) (*pb.JumpRes, error) 
 		log.Printf("gRPC Server: Response received %v", r.GetResponse())
 		return r, nil
 	}
-
 }
 
 func Start() {

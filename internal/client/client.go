@@ -11,7 +11,7 @@ import (
 
 const (
 	address     = "localhost:50051"
-	defaultName = "world"
+	defaultName = "jump"
 )
 
 func Jump(jump *pb.JumpReq) (*pb.JumpRes, error) {
@@ -19,8 +19,15 @@ func Jump(jump *pb.JumpReq) (*pb.JumpRes, error) {
 
 	// Obtaining Jump Step
 	a := jump.Jump.Jumps[:len(jump.Jump.Jumps)]
-	addr := a[0] + ":50051"
-	
+	addr := a[0]
+
+	// Control the number of jumps
+	if len(jump.Jump.Jumps) != 1 {
+		jump.Jump.Jumps = jump.Jump.Jumps[:len(jump.Jump.Jumps)-1]
+	} else {
+		jump.Jump.Jumps[0] = ""
+	}
+
 	// Connect with gRPC server
 	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
@@ -31,7 +38,7 @@ func Jump(jump *pb.JumpReq) (*pb.JumpRes, error) {
 
 	// Perform Jump
 	c := pb.NewJumpServiceClient(conn)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*20)
 	defer cancel()
 	r, err := c.Jump(ctx, &pb.JumpReq{Jump: jump.Jump})
 	if err != nil {
