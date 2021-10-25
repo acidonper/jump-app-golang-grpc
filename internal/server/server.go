@@ -29,7 +29,7 @@ func (s *server) Jump(ctx context.Context, jump *pb.JumpReq) (*pb.Response, erro
 	// Evaluate jumps to send response or perform a jump 
 	if len(jump.Jumps) == 0 || jump.Jumps[0] == "" {
 		log.Printf("gRPC Server: Send response 200")
-		return &pb.Response{Code: 200, Message: "/ - Greetings from Golang gRPC!"}, nil
+		return &pb.Response{Code: 200, Message: "/jump - Greetings from Golang gRPC!"}, nil
 	} else {
 		r, err := grpcclient.Jump(jump)
 		if err != nil {

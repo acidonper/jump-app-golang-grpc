@@ -48,5 +48,5 @@ func Jump(jump *pb.JumpReq) (*pb.Response, error) {
 
 	// Response
 	log.Printf("gRPC Client: Send received response %v", r)
-	return &pb.Response{Code: 200, Message: "/ - Greetings from Golang gRPC!"}, nil
+	return &pb.Response{Code: 200, Message: "/jump - Greetings from Golang gRPC!"}, nil
 }
