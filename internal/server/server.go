@@ -34,7 +34,7 @@ func (s *server) Jump(ctx context.Context, jump *pb.JumpReq) (*pb.Response, erro
 		r, err := grpcclient.Jump(jump)
 		if err != nil {
 			log.Fatalf("Error local calling grpcclient from grpcserver - %v", err)
-			return &pb.Response{Code: 500, Message: "/jump - Farewell from Python! Error Jumping"}, nil
+			return &pb.Response{Code: 500, Message: "/jump - Farewell from Python gRPC! Error Jumping"}, nil
 		}
 		log.Printf("gRPC Server: Response received %v", r)
 		return r, nil
