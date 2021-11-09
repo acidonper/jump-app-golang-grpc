@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"strconv"
 
 	grpcclient "github.com/acidonper/jump-app-golang-grpc/internal/client"
 	pb "github.com/acidonper/jump-app-protos/jump"
@@ -29,12 +30,12 @@ func (s *server) Jump(ctx context.Context, jump *pb.JumpReq) (*pb.Response, erro
 	// Evaluate jumps to send response or perform a jump 
 	if len(jump.Jumps) == 0 || jump.Jumps[0] == "" {
 		log.Printf("gRPC Server: Send response 200")
-		return &pb.Response{Code: 200, Message: "/jump - Greetings from Golang gRPC!"}, nil
+		return &pb.Response{Code: 200, Message: "/jump - Greetings from Golang gRPC! | Jumps: " + strconv.FormatInt(int64(jump.Count), 10)}, nil
 	} else {
 		r, err := grpcclient.Jump(jump)
 		if err != nil {
 			log.Fatalf("Error local calling grpcclient from grpcserver - %v", err)
-			return &pb.Response{Code: 500, Message: "/jump - Farewell from Python gRPC! Error Jumping"}, nil
+			return &pb.Response{Code: 500, Message: "/jump - Farewell from Golang gRPC! Error Jumping | Jumps: " + strconv.FormatInt(int64(jump.Count), 10)}, nil
 		}
 		log.Printf("gRPC Server: Response received %v", r)
 		return r, nil

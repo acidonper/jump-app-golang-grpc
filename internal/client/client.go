@@ -3,6 +3,7 @@ package grpcclient
 import (
 	"context"
 	"log"
+	"strconv"
 	"time"
 
 	pb "github.com/acidonper/jump-app-protos/jump"
@@ -18,8 +19,8 @@ func Jump(jump *pb.JumpReq) (*pb.Response, error) {
 	log.Printf("gRPC Client: Request received %v", jump)
 
 	// Obtaining Jump Step
-	a := jump.Jumps[:len(jump.Jumps)]
-	addr := a[0]
+	addr := jump.Jumps[len(jump.Jumps)-1]
+	log.Printf("gRPC Client: Jump to %v", addr)
 
 	// Control the number of jumps
 	if len(jump.Jumps) != 1 {
@@ -32,7 +33,7 @@ func Jump(jump *pb.JumpReq) (*pb.Response, error) {
 	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.WithBlock())
 	if err != nil {
 		log.Fatalf("Error gRPC server connection: %v", err)
-		return &pb.Response{Code: 400, Message: "/jump - Farewell from Golang gRPC"}, nil
+		return &pb.Response{Code: 400, Message: "/jump - Farewell from Golang gRPC | Jumps: " + strconv.FormatInt(int64(jump.Count), 10)}, nil
 	}
 	defer conn.Close()
 
@@ -43,10 +44,10 @@ func Jump(jump *pb.JumpReq) (*pb.Response, error) {
 	r, err := c.Jump(ctx, jump)
 	if err != nil {
 		log.Fatalf("Error gRPC server negotiation: %v", err)
-		return &pb.Response{Code: 400, Message: "/jump - Farewell from Golang gRPC"}, nil
+		return &pb.Response{Code: 400, Message: "/jump - Farewell from Golang gRPC  | Jumps: " + strconv.FormatInt(int64(jump.Count), 10)}, nil
 	}
 
 	// Response
 	log.Printf("gRPC Client: Send received response %v", r)
-	return &pb.Response{Code: 200, Message: "/jump - Greetings from Golang gRPC!"}, nil
+	return r, nil
 }
