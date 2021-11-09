@@ -41,7 +41,7 @@ func main() {
 ```$bash
 go run ./test/main.go
 ...
-2021/10/23 01:47:03 code:200  message:"/ - Greetings from Golang gRPC!"
+2021/10/23 01:47:03 code:200  message:"/ - Greetings from Golang gRPC! | Jumps: 3"
 ```
 
 # Test Docker image
@@ -64,7 +64,7 @@ podman run -it -d -p 50051:50051 jump-app-golang-grpc
 grpcurl -plaintext -d '{"count": 0, "message": "hola", "jumps": ["localhost:50051","localhost:50051"]}' localhost:50051 jump.JumpService/Jump
 {
   "code": 200,
-  "message": "/ - Greetings from Golang gRPC!"
+  "message": "/ - Greetings from Golang gRPC! | Jumps: 3"
 }
 ```
 
