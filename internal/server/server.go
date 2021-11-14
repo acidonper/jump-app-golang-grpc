@@ -27,6 +27,11 @@ func (s *server) Jump(ctx context.Context, jump *pb.JumpReq) (*pb.Response, erro
 	jump.Count = jump.Count + 1
 	log.Printf("gRPC Server: Steps count %v", jump.Count)
 
+	// Control the number of jumps when it is not the first jump
+	if len(jump.Jumps) > 0 && jump.Count > 1 {
+		jump.Jumps = jump.Jumps[1:len(jump.Jumps)]
+	}
+
 	// Evaluate jumps to send response or perform a jump 
 	if len(jump.Jumps) == 0 || jump.Jumps[0] == "" {
 		log.Printf("gRPC Server: Send response 200")

@@ -19,15 +19,8 @@ func Jump(jump *pb.JumpReq) (*pb.Response, error) {
 	log.Printf("gRPC Client: Request received %v", jump)
 
 	// Obtaining Jump Step
-	addr := jump.Jumps[len(jump.Jumps)-1]
+	addr := jump.Jumps[0]
 	log.Printf("gRPC Client: Jump to %v", addr)
-
-	// Control the number of jumps
-	if len(jump.Jumps) != 1 {
-		jump.Jumps = jump.Jumps[:len(jump.Jumps)-1]
-	} else {
-		jump.Jumps[0] = ""
-	}
 
 	// Connect with gRPC server
 	conn, err := grpc.Dial(addr, grpc.WithInsecure(), grpc.WithBlock())
